@@ -21,7 +21,6 @@ public class BattleSystem : MonoBehaviour
     public Transform playerBattleStation;
     public Transform enemyBattleStation;
 
-
     public BattleState state;
 
     public TMP_Text dialogText;
