@@ -244,6 +244,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   json: 
+  webDataList:
+    webData:
+    - lonelyInput: 
+      creature: 0
+      positiveInput: 
+      powerUp: 0
+    - lonelyInput: 
+      creature: 0
+      positiveInput: 
+      powerUp: 0
+    - lonelyInput: 
+      creature: 0
+      positiveInput: 
+      powerUp: 0
+    - lonelyInput: 
+      creature: 0
+      positiveInput: 
+      powerUp: 0
+    - lonelyInput: 
+      creature: 0
+      positiveInput: 
+      powerUp: 0
+    - lonelyInput: 
+      creature: 0
+      positiveInput: 
+      powerUp: 0
+    - lonelyInput: 
+      creature: 0
+      positiveInput: 
+      powerUp: 0
+    - lonelyInput: 
+      creature: 0
+      positiveInput: 
+      powerUp: 0
+    - lonelyInput: 
+      creature: 0
+      positiveInput: 
+      powerUp: 0
+    - lonelyInput: 
+      creature: 0
+      positiveInput: 
+      powerUp: 0
 --- !u!4 &1398799673
 Transform:
   m_ObjectHideFlags: 0
