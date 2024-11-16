@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public List<Unit> enemyList;
+    public List<Enemy> enemyList;
 
     public static EnemySpawner Instance { get; private set; }
 
@@ -25,10 +25,10 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    public Unit getEnemy()
+    public Enemy getEnemy()
     {
         int randomNum = Random.Range(0, enemyList.Count);
-        Unit enemy = enemyList[randomNum];
+        Enemy enemy = enemyList[randomNum];
         enemyList.RemoveAt(randomNum);
         return enemy;
     }

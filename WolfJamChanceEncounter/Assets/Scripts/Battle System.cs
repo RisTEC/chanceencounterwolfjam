@@ -30,9 +30,16 @@ public class BattleSystem : MonoBehaviour
     public BattleHub enemyHud;
 
 
-    Unit playerUnit;
-    Unit enemyUnit;
-    
+    public Player playerUnit;
+    public Enemy enemyUnit;
+
+    [SerializeField] private GameObject dpsSprite;
+    [SerializeField] private GameObject tankSprite;
+    [SerializeField] private GameObject healSprite;
+
+    private GameObject enemyGo;
+    private GameObject prefab;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,15 +51,15 @@ public class BattleSystem : MonoBehaviour
     IEnumerator SetUpBattle()
     {
         GameObject playerGo = Instantiate(playerPrefab, playerBattleStation);
-        playerUnit = playerGo.GetComponent<Unit>();
+        playerUnit = playerGo.GetComponent<Player>();
 
-        GameObject enemyGo = Instantiate(enemyPrefab, enemyBattleStation);
-        enemyUnit = enemyGo.GetComponent<Unit>();
+        enemyGo = Instantiate(enemyPrefab, enemyBattleStation);
+        enemyUnit = enemyGo.GetComponent<Enemy>();
 
         dialogText.text = enemyUnit.unitName + " approaches...";
 
-        playerHud.SetHUD(playerUnit);
-        enemyHud.SetHUD(enemyUnit);
+        playerHud.PlayerSetHUD(playerUnit);
+        enemyHud.EnemySetHUD(enemyUnit);
 
         yield return new WaitForSeconds(2f);
 
@@ -63,6 +70,9 @@ public class BattleSystem : MonoBehaviour
     IEnumerator PlayerAttack()
     {
         //Damage the enemy 
+        playerUnit.currentStamina -= (int)(playerUnit.maxStamina * 0.3);
+        playerHud.SetStamina(playerUnit);
+        //Debug.Log("Current Stamina "+playerUnit.currentStamina+" max stamina " + playerUnit.maxStamina);
         bool isDead = enemyUnit.TakeDamage(playerUnit.damage);
 
         enemyHud.SetHP(enemyUnit.currentHP);
@@ -77,9 +87,16 @@ public class BattleSystem : MonoBehaviour
             EndBattle(); */
 
             //Get next Enemy 
-            state = BattleState.NEXTENEMY;
-            StartCoroutine(SetNextEnemy());
-            
+            if(EnemySpawner.Instance.enemyList.Count == 0)
+            {
+                state = BattleState.WON;
+                EndBattle();
+            }
+            else
+            {
+                state = BattleState.NEXTENEMY;
+                StartCoroutine(SetNextEnemy());
+            }
         }
         else
         {
@@ -97,8 +114,9 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator SetNextEnemy()
     {
-        Unit nextEnemy = EnemySpawner.Instance.getEnemy();
+        Enemy nextEnemy = EnemySpawner.Instance.getEnemy();
         nextEnemy.unitLevel = enemyUnit.unitLevel + 1;
+        
         switch (nextEnemy.type)
         {
             case UnitType.DPS:
@@ -107,6 +125,9 @@ public class BattleSystem : MonoBehaviour
                 nextEnemy.damage = enemyUnit.damage + Random.Range(3, 5);
                 nextEnemy.healAmount = enemyUnit.healAmount + Random.Range(1, 3);
                 nextEnemy.unitName = "Attack Enemy";
+                prefab = dpsSprite;
+                //nextEnemy.GetComponentInChildren<SpriteRenderer>().sprite = dpsSprite;
+                //enemyGo.GetComponentInChildren<SpriteRenderer>().sprite = dpsSprite;
                 break;
             case UnitType.TANK:
                 nextEnemy.maxHP = enemyUnit.maxHP + Random.Range(5, 10);
@@ -114,6 +135,9 @@ public class BattleSystem : MonoBehaviour
                 nextEnemy.damage = enemyUnit.damage + Random.Range(1, 3);
                 nextEnemy.healAmount = enemyUnit.healAmount + Random.Range(1, 3);
                 nextEnemy.unitName = "Tank Enemy";
+                prefab = tankSprite;
+                //nextEnemy.GetComponentInChildren<SpriteRenderer>().sprite = tankSprite;
+                //enemyGo.GetComponentInChildren<SpriteRenderer>().sprite = tankSprite;
                 break;
             case UnitType.HEAL:
                 nextEnemy.maxHP = enemyUnit.maxHP + Random.Range(1, 5);
@@ -121,14 +145,22 @@ public class BattleSystem : MonoBehaviour
                 nextEnemy.damage = enemyUnit.damage + Random.Range(1, 3);
                 nextEnemy.healAmount = enemyUnit.healAmount + Random.Range(5, 10);
                 nextEnemy.unitName = "Heal Enemy";
+                prefab = healSprite;
+                //nextEnemy.GetComponentInChildren<SpriteRenderer>().sprite = healSprite;
+                //enemyGo.GetComponentInChildren<SpriteRenderer>().sprite = healSprite;
                 break;
         }
+        Destroy(enemyGo);
+        GameObject enemyGos = Instantiate(prefab, enemyBattleStation);
+        enemyUnit = enemyGos.GetComponent<Enemy>();
         enemyUnit = nextEnemy;
+        //enemyUnit.GetComponentInChildren<SpriteRenderer>().sprite = nextEnemy.GetComponentInChildren<SpriteRenderer>().sprite;
+        //enemyUnit.sRend = nextEnemy.sRend;
 
         dialogText.text = enemyUnit.unitName + " approaches...";
 
-        playerHud.SetHUD(playerUnit);
-        enemyHud.SetHUD(enemyUnit);
+        playerHud.PlayerSetHUD(playerUnit);
+        enemyHud.EnemySetHUD(enemyUnit);
 
         yield return new WaitForSeconds(2f);
 
@@ -203,6 +235,11 @@ public class BattleSystem : MonoBehaviour
                 }
                 break;
         }
+        if (playerUnit.guard)
+        {
+            playerUnit.guard = false;
+        }
+
         if (isDead)
         {
             state = BattleState.LOST;
@@ -210,6 +247,8 @@ public class BattleSystem : MonoBehaviour
         }
         else
         {
+            playerUnit.RecoverStamina();
+            playerHud.SetStamina(playerUnit);
             state = BattleState.PLAYERTURN;
             PlayerTurn();
         }
@@ -234,14 +273,28 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator PlayerHeal()
     {
+        playerUnit.currentStamina -= (int)(playerUnit.maxStamina * 0.5);
+        playerHud.SetStamina(playerUnit);
         playerUnit.Heal(playerUnit.healAmount);
 
         playerHud.SetHP(playerUnit.currentHP);
 
-        dialogText.text = "You heal 5 hitpoints";
+        dialogText.text = $"You heal {playerUnit.healAmount} hitpoints";
 
         yield return new WaitForSeconds(2f);
 
+        state = BattleState.ENEMYTURN;
+        StartCoroutine(EnemyTurn());
+    }
+
+    IEnumerator PlayerGuard()
+    {
+        Debug.Log("Guard");
+        playerUnit.GuardCheck();
+
+        dialogText.text = $"{playerUnit.unitName} braces for impact: ";
+
+        yield return new WaitForSeconds(1.5f);
         state = BattleState.ENEMYTURN;
         StartCoroutine(EnemyTurn());
     }
@@ -257,8 +310,41 @@ public class BattleSystem : MonoBehaviour
         yield return new WaitForSeconds(2f);
        
     }
-
+    #region Attack and Heal buttons
     public void OnAttackButton()
+    {
+        if(state == BattleState.PLAYERTURN && (playerUnit.currentStamina >= (0.3 * playerUnit.maxStamina)))
+        {
+            StartCoroutine(PlayerAttack());
+        }
+        else
+        {
+            if (playerUnit.currentStamina < (0.3 * playerUnit.maxStamina))
+            {
+                dialogText.text = "Not enough stamina!";
+            }
+            return;
+        }
+
+    }
+
+    public void OnHealButton()
+    {
+        if (state == BattleState.PLAYERTURN && (playerUnit.currentStamina >= (0.5 * playerUnit.maxStamina)))
+        {
+            StartCoroutine(PlayerHeal());
+        }
+        else
+        {
+            if (playerUnit.currentStamina < (0.5 * playerUnit.maxStamina))
+            {
+                dialogText.text = "Not enough stamina!";
+            }
+            return;
+        }
+    }
+
+    public void OnGuardButton()
     {
         if(state != BattleState.PLAYERTURN)
         {
@@ -266,24 +352,11 @@ public class BattleSystem : MonoBehaviour
         }
         else
         {
-            StartCoroutine(PlayerAttack());
-
+            StartCoroutine(PlayerGuard());
+          
         }
-
     }
+    #endregion 
 
-    public void OnHealButton()
-    {
-        if (state != BattleState.PLAYERTURN)
-        {
-            return;
-        }
-        else
-        {
-            StartCoroutine(PlayerHeal());
-
-        }
-
-    }
 
 }

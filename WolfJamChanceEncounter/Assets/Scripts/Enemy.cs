@@ -1,17 +1,23 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum UnitType
+{
+    PLAYER,
+    DPS,
+    TANK,
+    HEAL
+}
 
 
-public class Unit : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     public string unitName;
     public int unitLevel;
 
     public int damage;
-    
+
     public int maxHP;
     public int currentHP;
 
@@ -19,10 +25,12 @@ public class Unit : MonoBehaviour
 
     public UnitType type;// { get; set; }
 
-    public  bool TakeDamage(int damage)
+    public SpriteRenderer sRend;
+
+    public bool TakeDamage(int damage)
     {
         currentHP -= damage;
-        if(currentHP <= 0)
+        if (currentHP <= 0)
         {
             return true;
         }
@@ -33,7 +41,7 @@ public class Unit : MonoBehaviour
     public void Heal(int amount)
     {
         currentHP += amount;
-        if(currentHP > maxHP)
+        if (currentHP > maxHP)
         {
             currentHP = maxHP;
         }

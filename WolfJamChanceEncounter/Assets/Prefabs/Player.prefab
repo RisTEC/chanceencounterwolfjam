@@ -93,7 +93,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8225509816686929769}
-  - component: {fileID: 4047340303317264971}
+  - component: {fileID: -1624192535069751701}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -117,7 +117,7 @@ Transform:
   - {fileID: 4161718500277174801}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4047340303317264971
+--- !u!114 &-1624192535069751701
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -126,13 +126,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7087357975735794709}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdb978e1cceaed64fa6937999250bcf4, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e4768bafc15bd749b2b1dc5e38988e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitName: Player1
+  unitName: Player
   unitLevel: 99
   damage: 22
   maxHP: 25
   currentHP: 20
-  healAmount: 0
-  type: 0
+  healAmount: 10
+  maxStamina: 30
+  currentStamina: 30
