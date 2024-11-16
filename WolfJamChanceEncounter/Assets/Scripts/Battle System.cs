@@ -10,7 +10,8 @@ public enum BattleState {
     PLAYERTURN,
     ENEMYTURN,
     WON,
-    LOST
+    LOST,
+    NEXTENEMY
 }
 public class BattleSystem : MonoBehaviour
 {
@@ -37,8 +38,7 @@ public class BattleSystem : MonoBehaviour
     {
         state = BattleState.START;
         StartCoroutine(SetUpBattle());
-        
-
+       
     }
 
     IEnumerator SetUpBattle()
@@ -68,14 +68,18 @@ public class BattleSystem : MonoBehaviour
         enemyHud.SetHP(enemyUnit.currentHP);
         dialogText.text = "The attack hits!";
 
-        yield return new WaitForSeconds(2f);
 
         //Check if enemy is dead 
         if (isDead)
         {
             //End the battle
-            state = BattleState.WON;
-            EndBattle();
+            /*state = BattleState.WON;
+            EndBattle(); */
+
+            //Get next Enemy 
+            state = BattleState.NEXTENEMY;
+            StartCoroutine(SetNextEnemy());
+            
         }
         else
         {
@@ -84,26 +88,124 @@ public class BattleSystem : MonoBehaviour
             StartCoroutine(EnemyTurn());
 
         }
+        yield return new WaitForSeconds(2f);
+
         //change state based on what happened 
 
 
     }
 
+    IEnumerator SetNextEnemy()
+    {
+        Unit nextEnemy = EnemySpawner.Instance.getEnemy();
+        nextEnemy.unitLevel = enemyUnit.unitLevel + 1;
+        switch (nextEnemy.type)
+        {
+            case UnitType.DPS:
+                nextEnemy.maxHP = enemyUnit.maxHP + Random.Range(1, 5);
+                nextEnemy.currentHP = nextEnemy.maxHP;
+                nextEnemy.damage = enemyUnit.damage + Random.Range(3, 5);
+                nextEnemy.healAmount = enemyUnit.healAmount + Random.Range(1, 3);
+                nextEnemy.unitName = "Attack Enemy";
+                break;
+            case UnitType.TANK:
+                nextEnemy.maxHP = enemyUnit.maxHP + Random.Range(5, 10);
+                nextEnemy.currentHP = nextEnemy.maxHP;
+                nextEnemy.damage = enemyUnit.damage + Random.Range(1, 3);
+                nextEnemy.healAmount = enemyUnit.healAmount + Random.Range(1, 3);
+                nextEnemy.unitName = "Tank Enemy";
+                break;
+            case UnitType.HEAL:
+                nextEnemy.maxHP = enemyUnit.maxHP + Random.Range(1, 5);
+                nextEnemy.currentHP = nextEnemy.maxHP;
+                nextEnemy.damage = enemyUnit.damage + Random.Range(1, 3);
+                nextEnemy.healAmount = enemyUnit.healAmount + Random.Range(5, 10);
+                nextEnemy.unitName = "Heal Enemy";
+                break;
+        }
+        enemyUnit = nextEnemy;
+
+        dialogText.text = enemyUnit.unitName + " approaches...";
+
+        playerHud.SetHUD(playerUnit);
+        enemyHud.SetHUD(enemyUnit);
+
+        yield return new WaitForSeconds(2f);
+
+        state = BattleState.PLAYERTURN;
+        PlayerTurn();
+    }
+
     IEnumerator EnemyTurn()
     {
-        dialogText.text = enemyUnit.unitName + " attacks!";
+        bool isDead = false;
+        switch (enemyUnit.type)
+        {
+            case UnitType.DPS:
+                dialogText.text = enemyUnit.unitName + " attacks!";
 
-        yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(1f);
 
-        bool isDead = playerUnit.TakeDamage(enemyUnit.damage);
+                isDead = playerUnit.TakeDamage(enemyUnit.damage);
 
-        playerHud.SetHP(playerUnit.currentHP);
+                playerHud.SetHP(playerUnit.currentHP);
 
-        yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(1f);
+                break;
+            case UnitType.HEAL:
+                if (enemyUnit.currentHP < (enemyUnit.maxHP / 2))
+                {
+                    dialogText.text = enemyUnit.unitName + " heals!";
+                    isDead = false;
+                    yield return new WaitForSeconds(1f);
+                    //dialogText.text = enemyUnit.unitName + " heals!";
+                    // StartCoroutine(EnemyHeal());
+                    enemyUnit.Heal(enemyUnit.healAmount);
+                    enemyHud.SetHP(enemyUnit.currentHP);
+                    yield return new WaitForSeconds(1f);
+                }
+                else
+                {
+                    dialogText.text = enemyUnit.unitName + " attacks!";
 
+                    yield return new WaitForSeconds(1f);
+
+                    isDead = playerUnit.TakeDamage(enemyUnit.damage);
+
+                    playerHud.SetHP(playerUnit.currentHP);
+
+                    yield return new WaitForSeconds(1f);
+                }
+                break;
+            case UnitType.TANK:
+                if (enemyUnit.currentHP < (enemyUnit.maxHP / 4))
+                {
+                    dialogText.text = enemyUnit.unitName + " heals!";
+                    isDead = false;
+                    yield return new WaitForSeconds(1f);
+                    //dialogText.text = enemyUnit.unitName + " heals!";
+                    // StartCoroutine(EnemyHeal());
+                    enemyUnit.Heal(enemyUnit.healAmount);
+                    enemyHud.SetHP(enemyUnit.currentHP);
+                    yield return new WaitForSeconds(1f);
+                }
+                else
+                {
+                    dialogText.text = enemyUnit.unitName + " attacks!";
+
+                    yield return new WaitForSeconds(1f);
+
+                    isDead = playerUnit.TakeDamage(enemyUnit.damage);
+
+                    playerHud.SetHP(playerUnit.currentHP);
+
+                    yield return new WaitForSeconds(1f);
+                }
+                break;
+        }
         if (isDead)
         {
-            state = BattleState.WON;
+            state = BattleState.LOST;
             EndBattle();
         }
         else
@@ -132,7 +234,7 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator PlayerHeal()
     {
-        playerUnit.Heal(5);
+        playerUnit.Heal(playerUnit.healAmount);
 
         playerHud.SetHP(playerUnit.currentHP);
 
@@ -142,6 +244,18 @@ public class BattleSystem : MonoBehaviour
 
         state = BattleState.ENEMYTURN;
         StartCoroutine(EnemyTurn());
+    }
+
+    IEnumerator EnemyHeal()
+    {
+        enemyUnit.Heal(enemyUnit.healAmount);
+
+        enemyHud.SetHP(enemyUnit.currentHP);
+
+        dialogText.text = enemyUnit.unitName +" heals for " + enemyUnit.healAmount;
+
+        yield return new WaitForSeconds(2f);
+       
     }
 
     public void OnAttackButton()

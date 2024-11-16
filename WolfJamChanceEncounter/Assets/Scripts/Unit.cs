@@ -3,6 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum UnitType
+{
+    PLAYER,
+    DPS,
+    TANK,
+    HEAL
+}
+
+
 public class Unit : MonoBehaviour
 {
     public string unitName;
@@ -12,6 +21,10 @@ public class Unit : MonoBehaviour
     
     public int maxHP;
     public int currentHP;
+
+    public int healAmount;
+
+    public UnitType type;// { get; set; }
 
     public  bool TakeDamage(int damage)
     {
