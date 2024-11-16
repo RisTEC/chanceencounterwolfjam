@@ -34,7 +34,8 @@ public class Player : MonoBehaviour
         currentHP -= damage;
         if (currentHP <= 0)
         {
-            return true;
+            currentHP = 1;
+            return false;
         }
         else
             return false;

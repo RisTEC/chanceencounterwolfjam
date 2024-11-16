@@ -8,31 +8,59 @@ public class DialogBoxHub : MonoBehaviour
 {
     public Button attackButton;
     public Button healButton;
+    public Button guardButton;
+
+    public Image fire;
+    public Image heart;
+    public Image star;
+
 
     public TMP_Text dialogText;
 
-    [SerializeField] private List<Button> perks;
+    //[SerializeField] private List<Button> perks;
 
     public Transform spot1;
-    public Transform spot2;
-    public Transform spot3;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+        fire.enabled = false;
+        star.enabled = false;
+        heart.enabled = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void UIPerk(string word)
     {
-        
+        attackButton.enabled = false;
+        healButton.enabled = false;
+        guardButton.enabled = false;
+
+        if(word == "fire"){
+            fire.enabled = true;
+        }
+        else if (word == "heart")
+        {
+            heart.enabled = true;
+        }
+        else if (word == "star")
+        {
+            star.enabled = true;
+        }
     }
 
-    void UIPerk()
+    public void PerkOver()
     {
-
+        if (fire.enabled)
+        {
+            fire.enabled = false;
+        }
+        else if (heart.enabled)
+        {
+            heart.enabled = false;
+        }
+        else if (star.enabled)
+        {
+            star.enabled = false;
+        }
     }
-
 
 }

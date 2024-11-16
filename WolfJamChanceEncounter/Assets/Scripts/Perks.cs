@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class Perks : MonoBehaviour
 {
-    public enum type
+    public enum Reward
     {
         damage,
         heal,
         stamina
     }
-    public type enemyType;
-    private float modifier;
+    public Reward perkType;
+    public float modifier;
     public string message;
-    private List<Perks> allPerks = new List<Perks>();
+    public  List<Perks> allPerks = new List<Perks>();
     [SerializeField]
     // Start is called before the first frame update
     void Start()
@@ -27,20 +27,20 @@ public class Perks : MonoBehaviour
         
     }
 
-    void CreatePerk(type type, string message)
+    void CreatePerk(Reward type, string message)
     {
-        enemyType = type;
+        perkType = type;
         this.message = message;
         switch (type)
         {
-            case type.damage:
-                modifier = Random.Range(10,21);
+            case Reward.damage:
+                modifier = Random.Range(5,11);
                 break;
-            case type.heal:
-                modifier = Random.Range(10, 21);
+            case Reward.heal:
+                modifier = Random.Range(5, 11);
                 break;
-            case type.stamina:
-                modifier = Random.Range(10, 11);
+            case Reward.stamina:
+                modifier = Random.Range(5, 11);
                 break;
         }
 

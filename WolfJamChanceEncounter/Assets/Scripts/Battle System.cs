@@ -29,6 +29,7 @@ public class BattleSystem : MonoBehaviour
     public BattleHub playerHud;
     public BattleHub enemyHud;
 
+    public DialogBoxHub dialogBoxHub;
 
     public Player playerUnit;
     public Enemy enemyUnit;
@@ -39,6 +40,10 @@ public class BattleSystem : MonoBehaviour
 
     private GameObject enemyGo;
     private GameObject prefab;
+
+    private int amountKilled;
+
+    public Perks perks;
 
     // Start is called before the first frame update
     void Start()
@@ -87,10 +92,10 @@ public class BattleSystem : MonoBehaviour
             EndBattle(); */
 
             //Get next Enemy 
-            if(EnemySpawner.Instance.enemyList.Count == 0)
+            if(amountKilled %3 == 0)
             {
                 state = BattleState.WON;
-                EndBattle();
+                //EndBattle();
             }
             else
             {
@@ -252,6 +257,42 @@ public class BattleSystem : MonoBehaviour
             state = BattleState.PLAYERTURN;
             PlayerTurn();
         }
+    }
+
+    IEnumerator Perks()
+    {
+        int random = Random.Range(0, perks.allPerks.Count);
+        dialogText.text = perks.allPerks[random].message;
+
+        yield return new WaitForSeconds(1.5f);
+
+        if (state == BattleState.WON)
+        {
+            if (perks.allPerks[random].perkType == global::Perks.Reward.damage)
+            {
+                playerUnit.damage += (int)perks.allPerks[random].modifier;
+                dialogText.text = "Damaged increased";
+                dialogBoxHub.UIPerk("fire");
+            }
+            else if (perks.allPerks[random].perkType == global::Perks.Reward.heal)
+            {
+                playerUnit.maxHP += (int)perks.allPerks[random].modifier;
+                playerUnit.healAmount += (int)perks.allPerks[random].modifier;
+                dialogText.text = "Health increased";
+                dialogBoxHub.UIPerk("heart");
+
+            }
+            else if (perks.allPerks[random].perkType == global::Perks.Reward.stamina )
+            {
+                playerUnit.staminaRecovery += perks.allPerks[random].modifier;
+                dialogText.text = "Stamina recovery increased";
+                dialogBoxHub.UIPerk("star");
+            }
+            yield return new WaitForSeconds(1.5f);
+        }
+        state = BattleState.PLAYERTURN;
+        PlayerTurn();
+        
     }
 
     void EndBattle()
