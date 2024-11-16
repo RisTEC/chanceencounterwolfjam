@@ -14,7 +14,6 @@ public class Perks : MonoBehaviour
     public float modifier;
     public string message;
     public  List<Perks> allPerks = new List<Perks>();
-    [SerializeField]
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +26,8 @@ public class Perks : MonoBehaviour
         
     }
 
-    void CreatePerk(Reward type, string message)
+    public void CreatePerk(Reward type, string message)
+
     {
         perkType = type;
         this.message = message;
