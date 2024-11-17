@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/BJeon Work.unity
+    path: Assets/Scenes/StartScreen.unity
+    guid: d23907fd8e0204cfb97768977f8394df
+  - enabled: 1
+    path: Assets/Scenes/Combat.unity
     guid: 5e5d91a3326df9743a6e037567b5e429
   m_configObjects: {}

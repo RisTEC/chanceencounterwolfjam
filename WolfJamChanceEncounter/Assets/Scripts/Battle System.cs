@@ -160,6 +160,8 @@ public class BattleSystem : MonoBehaviour
         //enemyUnit.sRend = nextEnemy.sRend;
 
         dialogText.text = enemyUnit.unitName + " approaches...";
+        yield return new WaitForSeconds(2f);
+        dialogText.text = enemyUnit.message;
 
         playerHud.PlayerSetHUD(playerUnit);
         enemyHud.EnemySetHUD(enemyUnit);
@@ -258,12 +260,9 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator Perks()
     {
-
-
         dialogBoxHub.attackButton.gameObject.SetActive(false);
         dialogBoxHub.healButton.gameObject.SetActive(false);
         dialogBoxHub.guardButton.gameObject.SetActive(false);
-
         int random = Random.Range(0, allPerks.Count + 1);
         dialogText.text = allPerks[random].message;
         yield return new WaitForSeconds(2);
@@ -287,7 +286,7 @@ public class BattleSystem : MonoBehaviour
                 yield return new WaitForSeconds(1.5f);
 
             }
-            else if (allPerks[random].perkType == Reward.stamina )
+            else if (allPerks[random].perkType == Reward.stamina)
             {
                 dialogBoxHub.UIPerk("star");
                 playerUnit.staminaRecovery += allPerks[random].modifier;
@@ -299,7 +298,7 @@ public class BattleSystem : MonoBehaviour
         dialogBoxHub.PerkOver();
         state = BattleState.NEXTENEMY;
         StartCoroutine(SetNextEnemy());
-        
+
     }
 
     void EndBattle()
