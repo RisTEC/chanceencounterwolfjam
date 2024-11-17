@@ -24,6 +24,7 @@ public class ParseData : MonoBehaviour
     public WebDataList webDataList;
     [SerializeField]
     public Perks perks;
+    [SerializeField]
     public Enemy enemy;
     void Start()
     {
@@ -46,15 +47,12 @@ public class ParseData : MonoBehaviour
             Debug.Log(json);
             webDataList = JsonUtility.FromJson<WebDataList>(json);
 
-            for (int i = 0; i< webDataList.data.Count; i++)
+            for (int i = 0; i < webDataList.data.Count; i++)
             {
-                perks.CreatePerk((Reward)webDataList.data[i].powerUp-1, webDataList.data[i].positiveInput);
+                perks.CreatePerk((Reward)webDataList.data[i].powerUp - 1, webDataList.data[i].positiveInput);
                 enemy.createEnemy((UnitType)webDataList.data[i].creature, webDataList.data[i].lonelyInput);
-            }
-            for (int i = 0; i < perks.allPerks.Count; i++)
-            {
-                Debug.Log(perks.allPerks[i]);
-            }
+                Debug.Log((Reward)webDataList.data[i].powerUp - 1);
+            }   
         }
         else
         {

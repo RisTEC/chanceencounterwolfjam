@@ -262,10 +262,10 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator Perks()
     {
-        int random = Random.Range(0, perks.allPerks.Count);
+        int random = Random.Range(0, perks.allPerks.Count+1);
         dialogText.text = perks.allPerks[random].message;
         Debug.Log("Random num: " + random);
-        yield return new WaitForSeconds(1.5f);
+
         dialogBoxHub.attackButton.gameObject.SetActive(false);
         dialogBoxHub.healButton.gameObject.SetActive(false);
         dialogBoxHub.guardButton.gameObject.SetActive(false);
@@ -273,23 +273,27 @@ public class BattleSystem : MonoBehaviour
         {
             if (perks.allPerks[random].perkType == Reward.damage)
             {
+
+                dialogBoxHub.UIPerk("fire");
                 playerUnit.damage += (int)perks.allPerks[random].modifier;
                 dialogText.text = "Damaged increased";
-                dialogBoxHub.UIPerk("fire");
+                yield return new WaitForSeconds(1.5f);
             }
             else if (perks.allPerks[random].perkType == Reward.heal)
             {
+                dialogBoxHub.UIPerk("heart");
                 playerUnit.maxHP += (int)perks.allPerks[random].modifier;
                 playerUnit.healAmount += (int)perks.allPerks[random].modifier;
                 dialogText.text = "Health increased";
-                dialogBoxHub.UIPerk("heart");
+                yield return new WaitForSeconds(1.5f);
 
             }
             else if (perks.allPerks[random].perkType == Reward.stamina )
             {
+                dialogBoxHub.UIPerk("star");
                 playerUnit.staminaRecovery += perks.allPerks[random].modifier;
                 dialogText.text = "Stamina recovery increased";
-                dialogBoxHub.UIPerk("star");
+                yield return new WaitForSeconds(1.5f);
             }
             yield return new WaitForSeconds(1.5f);
         }
