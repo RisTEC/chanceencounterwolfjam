@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public enum BattleState {
     START,
     PLAYERTURN,
@@ -44,6 +43,7 @@ public class BattleSystem : MonoBehaviour
 
     public Perks perks;
 
+    public List<Perks> allPerks = new List<Perks>();
     // Start is called before the first frame update
     void Start()
     {
@@ -86,13 +86,9 @@ public class BattleSystem : MonoBehaviour
         //Check if enemy is dead 
         if (isDead)
         {
-            //End the battle
-            /*state = BattleState.WON;
-            EndBattle(); */
-
             //Get next Enemy 
             amountKilled++;
-            if(amountKilled == 1)//amountKilled %2 == 0)
+            if(amountKilled %3 == 0)
             {
                 state = BattleState.WON;
                 StartCoroutine(Perks());
@@ -262,36 +258,39 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator Perks()
     {
-        int random = Random.Range(0, perks.allPerks.Count+1);
-        dialogText.text = perks.allPerks[random].message;
-        Debug.Log("Random num: " + random);
+
 
         dialogBoxHub.attackButton.gameObject.SetActive(false);
         dialogBoxHub.healButton.gameObject.SetActive(false);
         dialogBoxHub.guardButton.gameObject.SetActive(false);
+
+        int random = Random.Range(0, allPerks.Count + 1);
+        dialogText.text = allPerks[random].message;
+        yield return new WaitForSeconds(2);
+        Debug.Log("Random num: " + random);
         if (state == BattleState.WON)
         {
-            if (perks.allPerks[random].perkType == Reward.damage)
+            if (allPerks[random].perkType == Reward.damage)
             {
 
                 dialogBoxHub.UIPerk("fire");
-                playerUnit.damage += (int)perks.allPerks[random].modifier;
+                playerUnit.damage += (int)allPerks[random].modifier;
                 dialogText.text = "Damaged increased";
                 yield return new WaitForSeconds(1.5f);
             }
-            else if (perks.allPerks[random].perkType == Reward.heal)
+            else if (allPerks[random].perkType == Reward.heal)
             {
                 dialogBoxHub.UIPerk("heart");
-                playerUnit.maxHP += (int)perks.allPerks[random].modifier;
-                playerUnit.healAmount += (int)perks.allPerks[random].modifier;
+                playerUnit.maxHP += (int)allPerks[random].modifier;
+                playerUnit.healAmount += (int)allPerks[random].modifier;
                 dialogText.text = "Health increased";
                 yield return new WaitForSeconds(1.5f);
 
             }
-            else if (perks.allPerks[random].perkType == Reward.stamina )
+            else if (allPerks[random].perkType == Reward.stamina )
             {
                 dialogBoxHub.UIPerk("star");
-                playerUnit.staminaRecovery += perks.allPerks[random].modifier;
+                playerUnit.staminaRecovery += allPerks[random].modifier;
                 dialogText.text = "Stamina recovery increased";
                 yield return new WaitForSeconds(1.5f);
             }

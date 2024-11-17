@@ -14,8 +14,8 @@ public class Perks : MonoBehaviour
     public Reward perkType;
     public float modifier;
     public string message;
-    public  List<Perks> allPerks = new List<Perks>();
-    // Start is called before the first frame update
+    public BattleSystem battleSystem;
+
     void Start()
     {
 
@@ -44,6 +44,6 @@ public class Perks : MonoBehaviour
                 break;
         }
 
-        allPerks.Add(this);
+        battleSystem.allPerks.Add(this);
     }
 }
