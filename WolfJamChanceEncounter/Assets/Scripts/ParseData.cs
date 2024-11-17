@@ -24,7 +24,7 @@ public class ParseData : MonoBehaviour
     public WebDataList webDataList;
     [SerializeField]
     public Perks perks;
-    public EnemySpawner enemySpawner;
+    public Enemy enemy;
     void Start()
     {
         //Calls fetchData to get data stored on a server
@@ -49,6 +49,7 @@ public class ParseData : MonoBehaviour
             for (int i = 0; i< webDataList.data.Count; i++)
             {
                 perks.CreatePerk((Reward)webDataList.data[i].powerUp-1, webDataList.data[i].positiveInput);
+                enemy.createEnemy((UnitType)webDataList.data[i].creature, webDataList.data[i].lonelyInput);
             }
             for (int i = 0; i < perks.allPerks.Count; i++)
             {

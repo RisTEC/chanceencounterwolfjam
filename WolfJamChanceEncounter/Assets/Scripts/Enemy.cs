@@ -15,6 +15,7 @@ public class Enemy : MonoBehaviour
 {
     public string unitName;
     public int unitLevel;
+    public string message;
 
     public int damage;
 
@@ -26,6 +27,7 @@ public class Enemy : MonoBehaviour
     public UnitType type;// { get; set; }
 
     public SpriteRenderer sRend;
+    public EnemySpawner enemySpawner;
 
     public bool TakeDamage(int damage)
     {
@@ -47,4 +49,10 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void createEnemy(UnitType type, string message)
+    {
+        this.type = type;
+        this.message = message;
+        enemySpawner.enemyList.Add(this);
+    }
 }
