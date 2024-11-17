@@ -1043,7 +1043,7 @@ MonoBehaviour:
   webDataList:
     data: []
   perks: {fileID: 1775616495}
-  enemySpawner: {fileID: 1637055822}
+  enemy: {fileID: 1730359333}
 --- !u!1 &448719472
 GameObject:
   m_ObjectHideFlags: 0
@@ -3367,6 +3367,60 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1638065020}
   m_CullTransparentMesh: 1
+--- !u!1 &1730359331
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1730359332}
+  - component: {fileID: 1730359333}
+  m_Layer: 0
+  m_Name: Enemy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1730359332
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730359331}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.7307296, y: -1.20003, z: -0.059337832}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1730359333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730359331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7d0fe44254836240ae6cf36c78932f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitName: 
+  unitLevel: 0
+  message: 
+  damage: 0
+  maxHP: 0
+  currentHP: 0
+  healAmount: 0
+  type: 0
+  sRend: {fileID: 0}
+  enemySpawner: {fileID: 1637055822}
 --- !u!1 &1775616493
 GameObject:
   m_ObjectHideFlags: 0
@@ -4508,3 +4562,4 @@ SceneRoots:
   - {fileID: 1637055821}
   - {fileID: 1775616494}
   - {fileID: 399719744}
+  - {fileID: 1730359332}
