@@ -48,7 +48,7 @@ public class ParseData : MonoBehaviour
 
             for (int i = 0; i< webDataList.data.Count; i++)
             {
-                perks.CreatePerk((Perks.type)webDataList.data[i].powerUp-1, webDataList.data[i].positiveInput);
+                perks.CreatePerk((Reward)webDataList.data[i].powerUp-1, webDataList.data[i].positiveInput);
             }
             for (int i = 0; i < perks.allPerks.Count; i++)
             {

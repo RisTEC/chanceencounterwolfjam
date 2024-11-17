@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Reward
+{
+    damage,
+    heal,
+    stamina
+}
 public class Perks : MonoBehaviour
 {
-    public enum Reward
-    {
-        damage,
-        heal,
-        stamina
-    }
+
     public Reward perkType;
     public float modifier;
     public string message;
@@ -27,7 +28,6 @@ public class Perks : MonoBehaviour
     }
 
     public void CreatePerk(Reward type, string message)
-
     {
         perkType = type;
         this.message = message;

@@ -23,44 +23,55 @@ public class DialogBoxHub : MonoBehaviour
 
     private void Start()
     {
+        /*
         fire.enabled = false;
         star.enabled = false;
-        heart.enabled = false;
+        heart.enabled = false; */
+        heart.gameObject.SetActive(false);
+        fire.gameObject.SetActive(false);
+        star.gameObject.SetActive(false);
     }
 
     public void UIPerk(string word)
     {
-        attackButton.enabled = false;
-        healButton.enabled = false;
-        guardButton.enabled = false;
+       
+        attackButton.gameObject.SetActive(false);
+        healButton.gameObject.SetActive(false);
+        guardButton.gameObject.SetActive(false);
 
-        if(word == "fire"){
-            fire.enabled = true;
+        if (word == "fire")
+        {
+            //fire.enabled = true;
+            fire.gameObject.SetActive(true);
         }
         else if (word == "heart")
         {
-            heart.enabled = true;
+           // heart.enabled = true;
+            heart.gameObject.SetActive(true);
+
         }
         else if (word == "star")
         {
-            star.enabled = true;
+            //star.enabled = true;
+            star.gameObject.SetActive(true);
         }
     }
 
     public void PerkOver()
     {
-        if (fire.enabled)
-        {
-            fire.enabled = false;
-        }
-        else if (heart.enabled)
-        {
-            heart.enabled = false;
-        }
-        else if (star.enabled)
-        {
-            star.enabled = false;
-        }
+        attackButton.gameObject.SetActive(true);
+        healButton.gameObject.SetActive(true);
+        guardButton.gameObject.SetActive(true);
+     
+            fire.gameObject.SetActive(false);
+         
+            // heart.enabled = false;
+            heart.gameObject.SetActive(false);
+       
+            //star.enabled = false;
+            star.gameObject.SetActive(false);
+      
     }
+  
 
 }

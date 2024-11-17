@@ -92,9 +92,11 @@ public class BattleSystem : MonoBehaviour
             EndBattle(); */
 
             //Get next Enemy 
-            if(amountKilled %3 == 0)
+            amountKilled++;
+            if(amountKilled == 1)//amountKilled %2 == 0)
             {
                 state = BattleState.WON;
+                StartCoroutine(Perks());
                 //EndBattle();
             }
             else
@@ -263,18 +265,20 @@ public class BattleSystem : MonoBehaviour
     {
         int random = Random.Range(0, perks.allPerks.Count);
         dialogText.text = perks.allPerks[random].message;
-
+        Debug.Log("Random num: " + random);
         yield return new WaitForSeconds(1.5f);
-
+        dialogBoxHub.attackButton.gameObject.SetActive(false);
+        dialogBoxHub.healButton.gameObject.SetActive(false);
+        dialogBoxHub.guardButton.gameObject.SetActive(false);
         if (state == BattleState.WON)
         {
-            if (perks.allPerks[random].perkType == global::Perks.Reward.damage)
+            if (perks.allPerks[random].perkType == Reward.damage)
             {
                 playerUnit.damage += (int)perks.allPerks[random].modifier;
                 dialogText.text = "Damaged increased";
                 dialogBoxHub.UIPerk("fire");
             }
-            else if (perks.allPerks[random].perkType == global::Perks.Reward.heal)
+            else if (perks.allPerks[random].perkType == Reward.heal)
             {
                 playerUnit.maxHP += (int)perks.allPerks[random].modifier;
                 playerUnit.healAmount += (int)perks.allPerks[random].modifier;
@@ -282,7 +286,7 @@ public class BattleSystem : MonoBehaviour
                 dialogBoxHub.UIPerk("heart");
 
             }
-            else if (perks.allPerks[random].perkType == global::Perks.Reward.stamina )
+            else if (perks.allPerks[random].perkType == Reward.stamina )
             {
                 playerUnit.staminaRecovery += perks.allPerks[random].modifier;
                 dialogText.text = "Stamina recovery increased";
@@ -290,8 +294,9 @@ public class BattleSystem : MonoBehaviour
             }
             yield return new WaitForSeconds(1.5f);
         }
-        state = BattleState.PLAYERTURN;
-        PlayerTurn();
+        dialogBoxHub.PerkOver();
+        state = BattleState.NEXTENEMY;
+        StartCoroutine(SetNextEnemy());
         
     }
 
