@@ -134,7 +134,7 @@ MonoBehaviour:
   unitLevel: 1
   damage: 22
   maxHP: 25
-  currentHP: 20
+  currentHP: 25
   healAmount: 10
   maxStamina: 30
   currentStamina: 30

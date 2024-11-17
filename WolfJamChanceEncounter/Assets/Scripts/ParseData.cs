@@ -35,7 +35,7 @@ public class ParseData : MonoBehaviour
     IEnumerator fetchData()
     {
         //Sends get request, attempts to recieve a JSON file
-        string url = "https://chance-encounter-web-app-b8362524d7c2.herokuapp.com/data";
+        string url = "http://cors.io/?https://chance-encounter-web-app-b8362524d7c2.herokuapp.com/data";
         UnityWebRequest request = UnityWebRequest.Get(url);
         yield return request.SendWebRequest();
 
