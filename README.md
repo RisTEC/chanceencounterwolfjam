@@ -1,4 +1,4 @@
-# chanceencounterwolfjam
+# Alone? in the Dark
 This project was made by Brandon Jeon, Rishit Roshan, and Nick Will
 
 This game, developed during the Wolf Jaw Studio's Wolfjam, revolves around the theme of connection. The project collects data on people's experiences with loneliness through a web app and integrates that data into the game, where these personal stories are brought to life and displayed within the gameplay environment. 
